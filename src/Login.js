@@ -12,7 +12,8 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://server1-gb00.onrender.com/api/login", {
+      //const response = await fetch("https://server1-gb00.onrender.com/api/login", {
+        const response = await fetch("https://server2-p77b.onrender.com/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,6 +68,7 @@ function Login() {
         <button type="submit">Iniciar sesión</button>
       </form>
       {message && <p>{message}</p>}
+      <button onClick={() => navigate("/register")}>Registrarse</button>
     </div>
   );
 }
