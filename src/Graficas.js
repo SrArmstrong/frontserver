@@ -17,7 +17,7 @@ function Graficas() {
             return;
         }
     
-        fetch("https://server2-p77b.onrender.com/api/verify-token", {
+        fetch("https://server1-gb00.onrender.com/api/verify-token", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -62,7 +62,7 @@ function Graficas() {
         Chart.getChart("responseTimeChart")?.destroy();
         Chart.getChart("logLevelsChart")?.destroy();
         Chart.getChart("userAgentsChart")?.destroy();
-        Chart.getChart("endpointResponseTimeChart")?.destroy();
+        //Chart.getChart("endpointResponseTimeChart")?.destroy();
 
         renderTotalRequestsChart(serverData);
         renderMethodsChart(serverData);
@@ -70,7 +70,7 @@ function Graficas() {
         renderResponseTimeChart(serverData);
         renderLogLevelsChart(serverData);
         renderUserAgentsChart(serverData);
-        renderEndpointResponseTimeChart(serverData);
+        //renderEndpointResponseTimeChart(serverData);
     };
 
     const chartContainerStyle = {
@@ -484,108 +484,6 @@ function Graficas() {
         });
     };
 
-    // Nueva gráfica: Tiempos de respuesta por endpoint
-    const renderEndpointResponseTimeChart = (data) => {
-        const ctx = document.getElementById('endpointResponseTimeChart');
-        
-        // Obtener los 5 endpoints más utilizados entre ambos servidores
-        const topEndpoints = [...new Set([
-            ...Object.keys(data.Server1.endpoints || {}),
-            ...Object.keys(data.Server2.endpoints || {})
-        ])].sort((a, b) => {
-            const totalA = ((data.Server1.endpoints[a]?.count || 0) + (data.Server2.endpoints[a]?.count || 0));
-            const totalB = ((data.Server1.endpoints[b]?.count || 0) + (data.Server2.endpoints[b]?.count || 0));
-            return totalB - totalA;
-        }).slice(0, 5);
-        
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: topEndpoints,
-                datasets: [
-                    {
-                        label: 'Server1 - Tiempo (ms)',
-                        data: topEndpoints.map(endpoint => data.Server1.endpoints[endpoint]?.avgTime || 0),
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Server2 - Tiempo (ms)',
-                        data: topEndpoints.map(endpoint => data.Server2.endpoints[endpoint]?.avgTime || 0),
-                        backgroundColor: 'rgba(241, 60, 60, 0.7)',
-                        borderColor: 'rgba(255, 99, 99, 0.7)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Server1 - Peticiones',
-                        data: topEndpoints.map(endpoint => data.Server1.endpoints[endpoint]?.count || 0),
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 0.8)',
-                        borderWidth: 1,
-                        type: 'line',
-                        yAxisID: 'y1'
-                    },
-                    {
-                        label: 'Server2 - Peticiones',
-                        data: topEndpoints.map(endpoint => data.Server2.endpoints[endpoint]?.count || 0),
-                        backgroundColor: 'rgba(241, 60, 60, 0.7)',
-                        borderColor: 'rgba(255, 99, 132, 0.8)',
-                        borderWidth: 1,
-                        type: 'line',
-                        yAxisID: 'y1'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    title: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0,0,0,0.9)',
-                        padding: 12,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label.includes('Tiempo')) {
-                                    return `${label}: ${context.parsed.y.toFixed(2)} ms`;
-                                } else {
-                                    return `${label}: ${context.parsed.y}`;
-                                }
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        title: {
-                            display: true,
-                            text: 'Tiempo (ms)'
-                        }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        title: {
-                            display: true,
-                            text: 'Número de peticiones'
-                        },
-                        grid: {
-                            drawOnChartArea: false
-                        }
-                    }
-                }
-            }
-        });
-    };
-
     const logout = () => {
         localStorage.removeItem("token");
         setMessage("Sesión expirada. Redirigiendo...");
@@ -653,18 +551,7 @@ function Graficas() {
                             <canvas id="userAgentsChart"></canvas>
                         </div>
                     </div>
-
-                    {/* Cuarta fila - Gráfica de rendimiento */}
-                    <div style={{ 
-                        display: 'grid',
-                        gridTemplateColumns: '1fr',
-                        gap: '25px'
-                    }}>
-                        <div style={chartContainerStyle}>
-                            <h3 style={chartTitleStyle}>Comparativa de Tiempos por Endpoint</h3>
-                            <canvas id="endpointResponseTimeChart"></canvas>
-                        </div>
-                    </div>
+                    
                 </div>
             )}
             

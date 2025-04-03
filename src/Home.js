@@ -14,7 +14,6 @@ function Home() {
       return;
     }
 
-    // Enviar token al servidor para verificar si sigue siendo válido
     //fetch("https://server1-gb00.onrender.com/api/verify-token", {
     fetch("https://server2-p77b.onrender.com/api/verify-token", {
       method: "POST",
@@ -28,7 +27,7 @@ function Home() {
         if (data.valid) {
           setMessage(`Bienvenido, sesión válida`);
         } else {
-          localStorage.removeItem("token"); // Eliminar token inválido
+          localStorage.removeItem("token");
           setMessage("Sesión expirada. Redirigiendo...");
           setTimeout(() => navigate("/"), 2000);
         }

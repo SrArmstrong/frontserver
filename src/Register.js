@@ -13,8 +13,8 @@ function Register() {
     e.preventDefault();
 
     try {
-    //const response = await fetch("https://server1-gb00.onrender.com/api/register", {
-    const response = await fetch("https://server2-p77b.onrender.com/api/register", {
+    const response = await fetch("https://server1-gb00.onrender.com/api/register", {
+    //const response = await fetch("https://server2-p77b.onrender.com/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
